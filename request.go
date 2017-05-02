@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"io/ioutil"
 
-	"./settings"
+	"current/settings"
 )
 
 
