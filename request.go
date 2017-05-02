@@ -30,10 +30,6 @@ type DatabaseListAPI struct {
 	Databases []DatabaseAPI `json:"database"`
 }
 
-func main() {
-	GetDatabases()
-}
-
 func GetDatabases() {
 	url := settings.DBAAS_ENDPOINT + "/api/database/"
     for {
