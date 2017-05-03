@@ -1,0 +1,1 @@
+web: ./dbaas-metric-collector
