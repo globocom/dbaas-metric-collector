@@ -1,1 +1,1 @@
-web: ./main
+web: ./dbaas-metric-collector
