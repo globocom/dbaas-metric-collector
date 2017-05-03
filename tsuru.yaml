@@ -1,3 +1,0 @@
-hooks:
-  build:
-    - go install github.com/otherpirate/dbaas-metric-collector
