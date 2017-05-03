@@ -2,7 +2,6 @@ package collector
 
 import (
 	"time"
-	"fmt"
 
 	"github.com/otherpirate/dbaas-metric-collector/model"
 )

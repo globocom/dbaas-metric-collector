@@ -7,7 +7,7 @@ import (
 )
 
 type Connection struct {
-	Session *mgo.Session
+	Session  *mgo.Session
 	Database *mgo.Database
 }
 
