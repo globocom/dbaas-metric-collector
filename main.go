@@ -1,9 +1,9 @@
 package main
 
 import (
-	"os"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/otherpirate/dbaas-metric-collector/collector"
 )
@@ -12,7 +12,7 @@ func main() {
 	http.HandleFunc("/", hello)
 	http.HandleFunc("/loading", loading)
 	fmt.Println("listening...")
-	err := http.ListenAndServe(":" + os.Getenv("PORT"), nil)
+	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 	if err != nil {
 		panic(err)
 	}
