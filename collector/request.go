@@ -1,4 +1,4 @@
-package main
+package collector
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"io/ioutil"
 
-	"current/settings"
+	"github.com/otherpirate/dbaas-metric-collector/settings"
 )
 
 
@@ -21,14 +21,26 @@ type DatabaseAPI struct {
 	Quarantine_At string `json:"quarantine_dt"`
 }
 
+type EnvironmentAPI struct {
+	Id int64 `json:"id"`
+	Name string `json:"name"`
+	Link LinkAPI `json:"_links"`
+}
+
 type LinkAPI struct {
 	Next string `json:"next"`
+	Self string `json:"self"`
 }
 
 type DatabaseListAPI struct {
 	Link LinkAPI `json:"_links"`
 	Databases []DatabaseAPI `json:"database"`
 }
+
+func (DatabaseListAPI) nome_func (params types) (return types) {
+	
+}
+
 
 func GetDatabases() {
 	url := settings.DBAAS_ENDPOINT + "/api/database/"
@@ -38,7 +50,7 @@ func GetDatabases() {
         	panic(err)
     	}
 
-    	database_list := ParseResponse(body)
+		database_list := ParseResponse(body)
 		for _, database := range database_list.Databases {
 			fmt.Println(database);	
 		}
@@ -50,7 +62,6 @@ func GetDatabases() {
 }
 
 func GetJson(url string) ([]byte, error) {
-
 	client := &http.Client{
 		Timeout: 10 * time.Second,
 	}
@@ -75,10 +86,10 @@ func GetJson(url string) ([]byte, error) {
 }
 
 func ParseResponse(body []byte) (*DatabaseListAPI) {
-    var database_list = new(DatabaseListAPI)
-    err := json.Unmarshal(body, &database_list)
+	api_obj := new(DatabaseListAPI)
+    err := json.Unmarshal(body, &api_obj)
     if(err != nil) {
         fmt.Println("Error in parser", err)
     }
-    return database_list
+    return api_obj
 }
