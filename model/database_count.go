@@ -9,7 +9,7 @@ type DatabaseCount struct {
 	Count  int
 }
 
-func Add(connection Connection, moment time.Time, count int) {
+func DatabaseCounterAdd(connection Connection, moment time.Time, count int) {
 	collection := connection.Database.C("DatabaseCounter")
 	err := collection.Insert(&DatabaseCount{moment, count})
 	if err != nil {

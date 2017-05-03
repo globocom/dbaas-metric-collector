@@ -10,7 +10,7 @@ import (
 	"github.com/otherpirate/dbaas-metric-collector/settings"
 )
 
-type DatabaseAPI struct {
+type Database struct {
 	Id            int64  `json:"id"`
 	Name          string `json:"name"`
 	Environment   string `json:"environment"`
@@ -32,27 +32,32 @@ type LinkAPI struct {
 }
 
 type DatabaseListAPI struct {
-	Link      LinkAPI       `json:"_links"`
-	Databases []DatabaseAPI `json:"database"`
+	Link      LinkAPI    `json:"_links"`
+	Databases []Database `json:"database"`
 }
 
 func GetDatabases() {
 	url := settings.DBAAS_ENDPOINT + "/api/database/"
+	databases := []Database{}
+
 	for {
 		body, err := GetJson(url)
 		if err != nil {
 			panic(err)
 		}
 
-		database_list := ParseResponse(body)
-		for _, database := range database_list.Databases {
-			fmt.Println(database)
+		database_page := ParseResponse(body)
+		for _, database := range database_page.Databases {
+			databases = append(databases, database)
 		}
-		if database_list.Link.Next == "" {
+
+		if database_page.Link.Next == "" {
 			break
 		}
-		url = database_list.Link.Next
+		url = database_page.Link.Next
 	}
+
+	Extractor(databases)
 }
 
 func GetJson(url string) ([]byte, error) {
