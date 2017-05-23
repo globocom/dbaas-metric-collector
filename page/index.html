@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Graphs</title>
+  <script type="text/javascript" src="js/Chart.min.js"></script>
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+
+  <script type="text/javascript" language="javascript">
+    $(document).ready(function() {
+      labels = []
+      data = []
+      $.getJSON('showing', function(response) {
+        for (var i = 0, len = response.length; i < len; i++) {
+          labels = labels.concat(response[i]['Moment']);
+          data = data.concat(parseInt(response[i]['Count']));
+        }
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(
+          ctx, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                data: data,
+                backgroundColor: "rgba(75,192,192,0.4)",
+                borderColor: "rgba(75,192,192,1)",
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointBackgroundColor: "#fff",
+              },]
+            },
+            options: {
+              responsive: true,
+              legend: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: '# of Databases'
+              }
+           }
+        });
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <canvas id="myChart"></canvas>
+</body>
+
+  <script type="text/javascript">
+</script>
+</html>
