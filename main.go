@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/", hello)
+	http.Handle("/", http.FileServer(http.Dir("page")))
 	http.HandleFunc("/loading", loading)
 	http.HandleFunc("/showing", showing)
 
@@ -20,10 +20,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-}
-
-func hello(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprintln(res, "hello, world!")
 }
 
 func loading(res http.ResponseWriter, req *http.Request) {
