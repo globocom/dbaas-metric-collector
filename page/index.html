@@ -2,44 +2,75 @@
 <html>
 <head>
   <title>Graphs</title>
-  <script type="text/javascript" src="js/Chart.min.js"></script>
+  <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
   <script type="text/javascript" src="js/jquery.min.js"></script>
 
   <script type="text/javascript" language="javascript">
     $(document).ready(function() {
-      labels = []
-      data = []
-      $.getJSON('showing', function(response) {
+      $.getJSON('database_count', function(response) {
+        labels = []
+        data = []
         for (var i = 0, len = response.length; i < len; i++) {
           labels = labels.concat(response[i]['Moment']);
           data = data.concat(parseInt(response[i]['Count']));
         }
 
-        var ctx = document.getElementById("myChart");
-        var myChart = new Chart(
-          ctx, {
-            type: 'line',
-            data: {
-              labels: labels,
-              datasets: [{
-                data: data,
-                backgroundColor: "rgba(75,192,192,0.4)",
-                borderColor: "rgba(75,192,192,1)",
-                pointBorderColor: "rgba(75,192,192,1)",
-                pointHoverBorderColor: "rgba(220,220,220,1)",
-                pointBackgroundColor: "#fff",
-              },]
-            },
-            options: {
-              responsive: true,
-              legend: {
-                display: false
-              },
-              title: {
-                display: true,
-                text: '# of Databases'
-              }
-           }
+        Highcharts.chart('database_count', {
+          chart: {
+            type: 'line'
+          },
+          title: {
+            text: '# of Database'
+          },
+          xAxis: {
+            categories: labels
+          },
+          yAxis: {
+            title: {
+              text: '# of Database',
+              min: 0,
+            }
+          },
+          series: [{
+            name: 'Databases',
+            data: data
+          }]
+        });
+      });
+
+      $.getJSON('team_count', function(response) {
+        data = []
+        for (var i = 0, len = response['Teams'].length; i < len; i++) {
+          name = response['Teams'][i]['Team'];
+          value = parseInt(response['Teams'][i]['Count']); 
+          data = data.concat([[name, value],])
+        }
+
+        Highcharts.chart('team_count', {
+          chart: {
+            type: 'column'
+          },
+          title: {
+            text: 'Databases per team at ' + response['Moment']
+          },
+          xAxis: {
+            type: 'category',
+            labels: {
+              rotation: -90,
+            }
+          },
+          yAxis: {
+            min: 0,
+          },
+          legend: {
+            enabled: false
+          },
+          series: [{
+            data: data,
+            dataLabels: {
+              enabled: true,
+            }
+          }]
         });
       });
     });
@@ -47,7 +78,8 @@
 </head>
 
 <body>
-  <canvas id="myChart"></canvas>
+  <div id="database_count" style="width:100%; height:400px;"></div>
+  <div id="team_count" style="width:100%; height:400px;"></div>
 </body>
 
   <script type="text/javascript">

@@ -13,7 +13,8 @@ import (
 func main() {
 	http.Handle("/", http.FileServer(http.Dir("page")))
 	http.HandleFunc("/loading", loading)
-	http.HandleFunc("/showing", showing)
+	http.HandleFunc("/database_count", database_count)
+	http.HandleFunc("/team_count", team_count)
 
 	fmt.Println("listening...")
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
@@ -27,13 +28,28 @@ func loading(res http.ResponseWriter, req *http.Request) {
 	fmt.Fprintln(res, "Loaded!")
 }
 
-func showing(res http.ResponseWriter, req *http.Request) {
+func database_count(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 
 	connection := model.GetConnection()
 	defer connection.Session.Close()
 
-	counters := model.DatabaseCounterLoad(connection)
+	counters := model.DatabaseCounterGet(connection)
+	content, err := json.Marshal(counters)
+	if err != nil {
+		panic(err)
+	}
+
+	res.Write(content)
+}
+
+func team_count(res http.ResponseWriter, req *http.Request) {
+	res.Header().Set("Content-Type", "application/json")
+
+	connection := model.GetConnection()
+	defer connection.Session.Close()
+
+	counters := model.TeamCounterGetLatest(connection)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)
