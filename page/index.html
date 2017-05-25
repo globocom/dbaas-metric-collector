@@ -40,7 +40,7 @@
       $.getJSON('team_count', function(response) {
         data = []
         for (var i = 0, len = response['Teams'].length; i < len; i++) {
-          name = response['Teams'][i]['Team'];
+          name = response['Teams'][i]['Name'];
           value = parseInt(response['Teams'][i]['Count']); 
           data = data.concat([[name, value],])
         }

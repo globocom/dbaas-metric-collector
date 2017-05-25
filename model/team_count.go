@@ -7,7 +7,7 @@ import (
 )
 
 type TeamCount struct {
-	Team  string
+	Name  string
 	Count int
 }
 
