@@ -40,6 +40,7 @@ func GetDatabases() {
 	databases := []Database{}
 	teams := make(map[string]string)
 	projects := make(map[string]string)
+	environments := make(map[string]string)
 
 	for {
 		body, err := GetJson(url)
@@ -64,6 +65,12 @@ func GetDatabases() {
 				}
 			}
 			database.Project = projects[database.Project]
+
+			_, ok = environments[database.Environment]
+			if !(ok) {
+				environments[database.Environment] = SubModelName(database.Environment)
+			}
+			database.Environment = environments[database.Environment]
 
 			databases = append(databases, database)
 		}

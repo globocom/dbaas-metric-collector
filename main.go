@@ -16,6 +16,7 @@ func main() {
 	http.HandleFunc("/database_count", database_count)
 	http.HandleFunc("/team_count", team_count)
 	http.HandleFunc("/project_count", project_count)
+	http.HandleFunc("/environment_count", environment_count)
 
 	fmt.Println("listening...")
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
@@ -66,6 +67,21 @@ func project_count(res http.ResponseWriter, req *http.Request) {
 	defer connection.Session.Close()
 
 	counters := model.ProjectCounterGetLatest(connection)
+	content, err := json.Marshal(counters)
+	if err != nil {
+		panic(err)
+	}
+
+	res.Write(content)
+}
+
+func environment_count(res http.ResponseWriter, req *http.Request) {
+	res.Header().Set("Content-Type", "application/json")
+
+	connection := model.GetConnection()
+	defer connection.Session.Close()
+
+	counters := model.EnvironmentCounterGetLatest(connection)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)
