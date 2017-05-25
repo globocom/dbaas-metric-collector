@@ -20,14 +20,17 @@
             type: 'line'
           },
           title: {
-            text: '# of Database'
+            text: '# of Databases'
+          },
+          legend: {
+            enabled: false
           },
           xAxis: {
             categories: labels
           },
           yAxis: {
             title: {
-              text: '# of Database',
+              text: '# of Databases',
             },
           },
           series: [{
@@ -57,13 +60,12 @@
             text: 'Databases per team at ' + response['Moment']
           },
           xAxis: {
-            type: 'category',
-            labels: {
-              rotation: -90,
-            }
+            type: 'category'
           },
           yAxis: {
-            min: 0,
+            title: {
+              text: '# of Databases',
+            },
           },
           legend: {
             enabled: false
@@ -98,12 +100,50 @@
           },
           xAxis: {
             type: 'category',
-            labels: {
-              rotation: -90,
-            }
           },
           yAxis: {
-            min: 0,
+            title: {
+              text: '# of Databases',
+            },
+          },
+          legend: {
+            enabled: false
+          },
+          series: [{
+            data: data,
+            dataLabels: {
+              enabled: true,
+            }
+          }]
+        });
+      });
+
+      $.getJSON('environment_count', function(response) {
+        data = []
+        for (var i = 0, len = response['Environments'].length; i < len; i++) {
+          name = response['Environments'][i]['Name'];
+          value = parseInt(response['Environments'][i]['Count']);
+          data = data.concat([[name, value],])
+        }
+
+        data.sort(function(first, second) {
+          return second[1] - first[1];
+        });
+
+        Highcharts.chart('environment_count', {
+          chart: {
+            type: 'column'
+          },
+          title: {
+            text: 'Databases per environment at ' + response['Moment']
+          },
+          xAxis: {
+            type: 'category',
+          },
+          yAxis: {
+            title: {
+              text: '# of Databases',
+            },
           },
           legend: {
             enabled: false
@@ -124,6 +164,7 @@
   <div id="database_count" style="width:100%; height:400px;"></div>
   <div id="team_count" style="width:100%; height:400px;"></div>
   <div id="project_count" style="width:100%; height:400px;"></div>
+  <div id="environment_count" style="width:100%; height:400px;"></div>
 </body>
 
   <script type="text/javascript">
