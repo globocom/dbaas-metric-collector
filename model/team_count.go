@@ -7,13 +7,13 @@ import (
 )
 
 type TeamCount struct {
-	Team string
+	Team  string
 	Count int
 }
 
 type TeamMoment struct {
 	Moment time.Time
-	Teams []TeamCount
+	Teams  []TeamCount
 }
 
 func TeamCounterAdd(connection Connection, moment time.Time, teams map[string]int) {
