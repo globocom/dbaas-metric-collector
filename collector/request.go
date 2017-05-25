@@ -31,15 +31,15 @@ type DatabaseListAPI struct {
 }
 
 type SubModelAPI struct {
-	Id   int64   `json:"id"`
-	Name string  `json:"name"`
+	Id   int64  `json:"id"`
+	Name string `json:"name"`
 }
-
 
 func GetDatabases() {
 	url := settings.DBAAS_ENDPOINT + "/api/database/"
 	databases := []Database{}
 	teams := make(map[string]string)
+	projects := make(map[string]string)
 
 	for {
 		body, err := GetJson(url)
@@ -53,8 +53,18 @@ func GetDatabases() {
 			if !(ok) {
 				teams[database.Team] = SubModelName(database.Team)
 			}
-
 			database.Team = teams[database.Team]
+
+			if database.Project == "" {
+				projects[database.Project] = "No project"
+			} else {
+				_, ok = projects[database.Project]
+				if !(ok) {
+					projects[database.Project] = SubModelName(database.Project)
+				}
+			}
+			database.Project = projects[database.Project]
+
 			databases = append(databases, database)
 		}
 

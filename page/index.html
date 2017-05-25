@@ -76,6 +76,46 @@
           }]
         });
       });
+
+      $.getJSON('project_count', function(response) {
+        data = []
+        for (var i = 0, len = response['Projects'].length; i < len; i++) {
+          name = response['Projects'][i]['Name'];
+          value = parseInt(response['Projects'][i]['Count']);
+          data = data.concat([[name, value],])
+        }
+
+        data.sort(function(first, second) {
+          return second[1] - first[1];
+        });
+
+        Highcharts.chart('project_count', {
+          chart: {
+            type: 'column'
+          },
+          title: {
+            text: 'Databases per project at ' + response['Moment']
+          },
+          xAxis: {
+            type: 'category',
+            labels: {
+              rotation: -90,
+            }
+          },
+          yAxis: {
+            min: 0,
+          },
+          legend: {
+            enabled: false
+          },
+          series: [{
+            data: data,
+            dataLabels: {
+              enabled: true,
+            }
+          }]
+        });
+      });
     });
   </script>
 </head>
@@ -83,6 +123,7 @@
 <body>
   <div id="database_count" style="width:100%; height:400px;"></div>
   <div id="team_count" style="width:100%; height:400px;"></div>
+  <div id="project_count" style="width:100%; height:400px;"></div>
 </body>
 
   <script type="text/javascript">
