@@ -46,6 +46,10 @@
           data = data.concat([[name, value],])
         }
 
+        data.sort(function(first, second) {
+          return second[1] - first[1];
+        });
+
         Highcharts.chart('team_count', {
           chart: {
             type: 'column'
