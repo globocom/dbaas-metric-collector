@@ -20,12 +20,6 @@ type Database struct {
 	Quarantine_At string `json:"quarantine_dt"`
 }
 
-type EnvironmentAPI struct {
-	Id   int64   `json:"id"`
-	Name string  `json:"name"`
-	Link LinkAPI `json:"_links"`
-}
-
 type LinkAPI struct {
 	Next string `json:"next"`
 	Self string `json:"self"`
@@ -36,9 +30,16 @@ type DatabaseListAPI struct {
 	Databases []Database `json:"database"`
 }
 
+type SubModelAPI struct {
+	Id   int64   `json:"id"`
+	Name string  `json:"name"`
+}
+
+
 func GetDatabases() {
 	url := settings.DBAAS_ENDPOINT + "/api/database/"
 	databases := []Database{}
+	teams := make(map[string]string)
 
 	for {
 		body, err := GetJson(url)
@@ -46,8 +47,14 @@ func GetDatabases() {
 			panic(err)
 		}
 
-		database_page := ParseResponse(body)
+		database_page := ParseResponseDatabases(body)
 		for _, database := range database_page.Databases {
+			_, ok := teams[database.Team]
+			if !(ok) {
+				teams[database.Team] = SubModelName(database.Team)
+			}
+
+			database.Team = teams[database.Team]
 			databases = append(databases, database)
 		}
 
@@ -58,6 +65,14 @@ func GetDatabases() {
 	}
 
 	Extractor(databases)
+}
+
+func SubModelName(url string) string {
+	body, err := GetJson(url)
+	if err != nil {
+		panic(err)
+	}
+	return ParseResponseSubModel(body).Name
 }
 
 func GetJson(url string) ([]byte, error) {
@@ -84,8 +99,17 @@ func GetJson(url string) ([]byte, error) {
 	return []byte(body), err
 }
 
-func ParseResponse(body []byte) *DatabaseListAPI {
+func ParseResponseDatabases(body []byte) *DatabaseListAPI {
 	api_obj := new(DatabaseListAPI)
+	err := json.Unmarshal(body, &api_obj)
+	if err != nil {
+		fmt.Println("Error in parser", err)
+	}
+	return api_obj
+}
+
+func ParseResponseSubModel(body []byte) *SubModelAPI {
+	api_obj := new(SubModelAPI)
 	err := json.Unmarshal(body, &api_obj)
 	if err != nil {
 		fmt.Println("Error in parser", err)
