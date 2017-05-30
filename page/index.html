@@ -7,6 +7,7 @@
 
   <script type="text/javascript" language="javascript">
     $(document).ready(function() {
+
       $.getJSON('database_count', function(response) {
         labels = []
         data = []
@@ -156,11 +157,59 @@
           }]
         });
       });
+
+      $.getJSON('engine_count', function(response) {
+        labels = []
+        data = {}
+        for (var i = 0, len = response.length; i < len; i++) {
+          labels = labels.concat(response[i]['Moment']);
+
+          for (var j = 0, engine_len = response[i]['Engines'].length; j < engine_len; j++) {
+            engine = response[i]['Engines'][j]['Name']
+            count = response[i]['Engines'][j]['Count']
+
+            if (!(engine in data)) {
+              data[engine] = []
+            }
+            data[engine] = data[engine].concat(count)
+          }
+        }
+
+        engines = []
+        for (engine in data) {
+          engines = engines.concat({
+            'name': engine, 'data': data[engine]
+          })
+        }
+
+        Highcharts.chart('engine_count', {
+          chart: {
+            type: 'column'
+          },
+          title: {
+            text: 'Stacked column chart'
+          },
+          xAxis: {
+            categories: labels
+          },
+          plotOptions: {
+            column: {
+              stacking: 'normal',
+              dataLabels: {
+                enabled: true,
+                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+              }
+            }
+          },
+          series: engines
+        });
+      });
     });
   </script>
 </head>
 
 <body>
+  <div id="engine_count" style="width:100%; height:400px;"></div>
   <div id="database_count" style="width:100%; height:400px;"></div>
   <div id="team_count" style="width:100%; height:400px;"></div>
   <div id="project_count" style="width:100%; height:400px;"></div>

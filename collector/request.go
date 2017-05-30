@@ -16,6 +16,7 @@ type Database struct {
 	Environment   string `json:"environment"`
 	Project       string `json:"project"`
 	Team          string `json:"team"`
+	Engine        string `json:"engine"`
 	Created_At    string `json:"created_at"`
 	Quarantine_At string `json:"quarantine_dt"`
 }
