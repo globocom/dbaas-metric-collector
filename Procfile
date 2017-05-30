@@ -1,1 +1,1 @@
-web: ./dbaas-metric-collector
+web: ./dbaas-metric-collector --timeout 1800
