@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/otherpirate/dbaas-metric-collector/collector"
+	"github.com/otherpirate/dbaas-metric-collector/cron"
 	"github.com/otherpirate/dbaas-metric-collector/model"
 )
 
@@ -18,6 +19,8 @@ func main() {
 	http.HandleFunc("/project_count", project_count)
 	http.HandleFunc("/environment_count", environment_count)
 	http.HandleFunc("/engine_count", engine_count)
+
+	go cron.DailyLoading()
 
 	fmt.Println("listening...")
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
