@@ -26,5 +26,10 @@ func DatabaseCounterGet(connection Connection) []DatabaseCount {
 	if err != nil {
 		panic(err)
 	}
+
+	diff := len(counters) - 15
+	if diff > 0 {
+		counters = counters[diff:]
+	}
 	return counters
 }
