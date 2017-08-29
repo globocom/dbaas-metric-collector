@@ -14,6 +14,7 @@ import (
 func main() {
 	http.Handle("/", http.FileServer(http.Dir("page")))
 	http.HandleFunc("/loading", loading)
+	http.HandleFunc("/healthcheck", healthcheck)
 	http.HandleFunc("/database_count", database_count)
 	http.HandleFunc("/team_count", team_count)
 	http.HandleFunc("/project_count", project_count)
@@ -32,6 +33,10 @@ func main() {
 func loading(res http.ResponseWriter, req *http.Request) {
 	collector.GetDatabases()
 	fmt.Fprintln(res, "Loaded!")
+}
+
+func healthcheck(res http.ResponseWriter, req *http.Request) {
+	fmt.Fprintln(res, "WORKING")
 }
 
 func database_count(res http.ResponseWriter, req *http.Request) {
