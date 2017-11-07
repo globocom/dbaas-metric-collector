@@ -19,7 +19,7 @@ func DatabaseCounterAdd(connection Connection, moment time.Time, count int) {
 	}
 }
 
-func DatabaseCounterGet(connection Connection) []DatabaseCount {
+func DatabaseCounterGet(connection Connection, size int) []DatabaseCount {
 	counters := []DatabaseCount{}
 	collection := connection.Database.C("DatabaseCounter")
 	err := collection.Find(bson.M{}).All(&counters)
@@ -27,7 +27,7 @@ func DatabaseCounterGet(connection Connection) []DatabaseCount {
 		panic(err)
 	}
 
-	diff := len(counters) - 20
+	diff := len(counters) - size
 	if diff > 0 {
 		counters = counters[diff:]
 	}

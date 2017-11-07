@@ -29,7 +29,7 @@ func EngineCounterAdd(connection Connection, moment time.Time, engines map[strin
 	}
 }
 
-func EngineCounterGet(connection Connection) []EngineMoment {
+func EngineCounterGet(connection Connection, size int) []EngineMoment {
 	counters := []EngineMoment{}
 	collection := connection.Database.C("EngineCounterMoment")
 	err := collection.Find(bson.M{}).All(&counters)

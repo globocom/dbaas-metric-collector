@@ -45,7 +45,7 @@ func database_count(res http.ResponseWriter, req *http.Request) {
 	connection := model.GetConnection()
 	defer connection.Session.Close()
 
-	counters := model.DatabaseCounterGet(connection)
+	counters := model.DatabaseCounterGet(connection, 20)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)
@@ -105,7 +105,7 @@ func engine_count(res http.ResponseWriter, req *http.Request) {
 	connection := model.GetConnection()
 	defer connection.Session.Close()
 
-	counters := model.EngineCounterGet(connection)
+	counters := model.EngineCounterGet(connection, 20)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)
