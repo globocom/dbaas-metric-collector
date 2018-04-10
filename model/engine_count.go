@@ -37,7 +37,7 @@ func EngineCounterGet(connection Connection, size int) []EngineMoment {
 		panic(err)
 	}
 
-	diff := len(counters) - 20
+	diff := len(counters) - size
 	if diff > 0 {
 		counters = counters[diff:]
 	}

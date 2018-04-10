@@ -15,11 +15,11 @@ func main() {
 	http.Handle("/", http.FileServer(http.Dir("page")))
 	http.HandleFunc("/loading", loading)
 	http.HandleFunc("/healthcheck", healthcheck)
+	http.HandleFunc("/engine_count", engine_count)
 	http.HandleFunc("/database_count", database_count)
 	http.HandleFunc("/team_count", team_count)
 	http.HandleFunc("/project_count", project_count)
 	http.HandleFunc("/environment_count", environment_count)
-	http.HandleFunc("/engine_count", engine_count)
 
 	go cron.DailyLoading()
 
@@ -45,7 +45,7 @@ func database_count(res http.ResponseWriter, req *http.Request) {
 	connection := model.GetConnection()
 	defer connection.Session.Close()
 
-	counters := model.DatabaseCounterGet(connection, 20)
+	counters := model.DatabaseCounterGet(connection, 30)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)
@@ -105,7 +105,7 @@ func engine_count(res http.ResponseWriter, req *http.Request) {
 	connection := model.GetConnection()
 	defer connection.Session.Close()
 
-	counters := model.EngineCounterGet(connection, 20)
+	counters := model.EngineCounterGet(connection, 30)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)

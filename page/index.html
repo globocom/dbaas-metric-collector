@@ -170,6 +170,9 @@
 
             if (!(engine in data)) {
               data[engine] = []
+              for (var x = 0; x < i; x++){
+                data[engine] = data[engine].concat(0);
+              }
             }
             data[engine] = data[engine].concat(count)
           }
