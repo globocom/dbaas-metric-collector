@@ -2,8 +2,6 @@ package model
 
 import (
 	"time"
-
-	"gopkg.in/mgo.v2/bson"
 )
 
 type EngineCount struct {
@@ -29,17 +27,15 @@ func EngineCounterAdd(connection Connection, moment time.Time, engines map[strin
 	}
 }
 
-func EngineCounterGet(connection Connection, size int) []EngineMoment {
+func EngineCounterGet(connection Connection, dateFrom string, dateTo string) []EngineMoment {
 	counters := []EngineMoment{}
 	collection := connection.Database.C("EngineCounterMoment")
-	err := collection.Find(bson.M{}).All(&counters)
+
+	filter := DateTimeFilter(dateFrom, dateTo)
+
+	err := collection.Find(filter).All(&counters)
 	if err != nil {
 		panic(err)
-	}
-
-	diff := len(counters) - size
-	if diff > 0 {
-		counters = counters[diff:]
 	}
 
 	return counters
