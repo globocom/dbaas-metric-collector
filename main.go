@@ -11,6 +11,13 @@ import (
 	"github.com/otherpirate/dbaas-metric-collector/model"
 )
 
+func getDate(req *http.Request) (string, string){
+    queryString := req.URL.Query()
+	dateFrom := queryString["from"][0] 
+	dateTo := queryString["to"][0] 
+    return dateFrom, dateTo
+}
+
 func main() {
 	http.Handle("/", http.FileServer(http.Dir("page")))
 	http.HandleFunc("/loading", loading)
@@ -42,17 +49,19 @@ func healthcheck(res http.ResponseWriter, req *http.Request) {
 func database_count(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 
+	dateFrom, dateTo := getDate(req)
+	
 	connection := model.GetConnection()
 	defer connection.Session.Close()
-
-	counters := model.DatabaseCounterGet(connection, 30)
+	counters := model.DatabaseCounterGet(connection, dateFrom, dateTo)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)
 	}
-
+   
 	res.Write(content)
 }
+
 
 func team_count(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
@@ -101,11 +110,12 @@ func environment_count(res http.ResponseWriter, req *http.Request) {
 
 func engine_count(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
+	dateFrom, dateTo := getDate(req)
 
 	connection := model.GetConnection()
 	defer connection.Session.Close()
 
-	counters := model.EngineCounterGet(connection, 30)
+	counters := model.EngineCounterGet(connection, dateFrom, dateTo)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)
