@@ -66,10 +66,12 @@ func database_count(res http.ResponseWriter, req *http.Request) {
 func team_count(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 
+	dateFrom, dateTo := getDate(req)
+
 	connection := model.GetConnection()
 	defer connection.Session.Close()
 
-	counters := model.TeamCounterGetLatest(connection)
+	counters := model.TeamCounterGetLatest(connection, dateFrom, dateTo)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)
@@ -81,10 +83,12 @@ func team_count(res http.ResponseWriter, req *http.Request) {
 func project_count(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 
+	dateFrom, dateTo := getDate(req)
+
 	connection := model.GetConnection()
 	defer connection.Session.Close()
 
-	counters := model.ProjectCounterGetLatest(connection)
+	counters := model.ProjectCounterGetLatest(connection, dateFrom , dateTo)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)
@@ -96,10 +100,12 @@ func project_count(res http.ResponseWriter, req *http.Request) {
 func environment_count(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 
+	dateFrom, dateTo := getDate(req)
+
 	connection := model.GetConnection()
 	defer connection.Session.Close()
 
-	counters := model.EnvironmentCounterGetLatest(connection)
+	counters := model.EnvironmentCounterGetLatest(connection, dateFrom, dateTo)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)
@@ -110,6 +116,7 @@ func environment_count(res http.ResponseWriter, req *http.Request) {
 
 func engine_count(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
+	
 	dateFrom, dateTo := getDate(req)
 
 	connection := model.GetConnection()

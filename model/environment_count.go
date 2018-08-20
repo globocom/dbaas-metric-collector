@@ -2,8 +2,6 @@ package model
 
 import (
 	"time"
-
-	"gopkg.in/mgo.v2/bson"
 )
 
 type EnvironmentCount struct {
@@ -29,10 +27,13 @@ func EnvironmentCounterAdd(connection Connection, moment time.Time, environments
 	}
 }
 
-func EnvironmentCounterGetLatest(connection Connection) EnvironmentMoment {
+func EnvironmentCounterGetLatest(connection Connection, dateFrom string, dateTo string) EnvironmentMoment {
 	counters := EnvironmentMoment{}
 	collection := connection.Database.C("EnvironmentCounterMoment")
-	err := collection.Find(bson.M{}).Limit(1).Sort("-$natural").One(&counters)
+ 
+	filter := DateTimeFilter(dateFrom, dateTo)
+
+	err := collection.Find(filter).Limit(1).Sort("-$natural").One(&counters)
 	if err != nil {
 		panic(err)
 	}
