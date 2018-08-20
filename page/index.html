@@ -4,236 +4,282 @@
   <title>Graphs</title>
   <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
   <script type="text/javascript" src="js/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 
   <script type="text/javascript" language="javascript">
+    
     $(document).ready(function() {
+      default_value_date()
+      load_date();
 
-      $.getJSON('database_count', function(response) {
-        labels = []
-        data = []
-        for (var i = 0, len = response.length; i < len; i++) {
-          labels = labels.concat(response[i]['Moment']);
-          data = data.concat(parseInt(response[i]['Count']));
-        }
-
-        Highcharts.chart('database_count', {
-          chart: {
-            type: 'line'
-          },
-          title: {
-            text: '# of Databases'
-          },
-          legend: {
-            enabled: false
-          },
-          xAxis: {
-            categories: labels
-          },
-          yAxis: {
-            title: {
-              text: '# of Databases',
-            },
-          },
-          series: [{
-            name: 'Databases',
-            data: data
-          }]
-        });
+      $('#id_date').on("click", function() {
+        load_date();
       });
 
-      $.getJSON('team_count', function(response) {
-        data = []
-        for (var i = 0, len = response['Teams'].length; i < len; i++) {
-          name = response['Teams'][i]['Name'];
-          value = parseInt(response['Teams'][i]['Count']); 
-          data = data.concat([[name, value],])
-        }
+      function default_value_date(){
+        var to = new Date();
+        var from = new Date();
+        from.setMonth(to.getMonth())
+        var from_month = from.getMonth()
+        var to_month = (to.getMonth() + 1);               
+        var day = to.getDate();
+        if (to_month < 10) to_month = "0" + to_month;
+        if (from_month < 10) from_month = "0" + from_month;
+        if (day < 10) day = "0" + day;
+        var to = to.getFullYear() + '-' + to_month + '-' + day;
+        var from = from.getFullYear() + '-' + from_month + '-' + day;
+        $('#calendar_from').val(from);
+        $('#calendar_to').val(to);
+      };
 
-        data.sort(function(first, second) {
-          return second[1] - first[1];
-        });
-
-        Highcharts.chart('team_count', {
-          chart: {
-            type: 'column'
-          },
-          title: {
-            text: 'Databases per team at ' + response['Moment']
-          },
-          xAxis: {
-            type: 'category'
-          },
-          yAxis: {
-            title: {
-              text: '# of Databases',
-            },
-          },
-          legend: {
-            enabled: false
-          },
-          series: [{
-            data: data,
-            dataLabels: {
-              enabled: true,
-            }
-          }]
-        });
-      });
-
-      $.getJSON('project_count', function(response) {
-        data = []
-        for (var i = 0, len = response['Projects'].length; i < len; i++) {
-          name = response['Projects'][i]['Name'];
-          value = parseInt(response['Projects'][i]['Count']);
-          data = data.concat([[name, value],])
-        }
-
-        data.sort(function(first, second) {
-          return second[1] - first[1];
-        });
-
-        Highcharts.chart('project_count', {
-          chart: {
-            type: 'column'
-          },
-          title: {
-            text: 'Databases per project at ' + response['Moment']
-          },
-          xAxis: {
-            type: 'category',
-          },
-          yAxis: {
-            title: {
-              text: '# of Databases',
-            },
-          },
-          legend: {
-            enabled: false
-          },
-          series: [{
-            data: data,
-            dataLabels: {
-              enabled: true,
-            }
-          }]
-        });
-      });
-
-      $.getJSON('environment_count', function(response) {
-        data = []
-        for (var i = 0, len = response['Environments'].length; i < len; i++) {
-          name = response['Environments'][i]['Name'];
-          value = parseInt(response['Environments'][i]['Count']);
-          data = data.concat([[name, value],])
-        }
-
-        data.sort(function(first, second) {
-          return second[1] - first[1];
-        });
-
-        Highcharts.chart('environment_count', {
-          chart: {
-            type: 'column'
-          },
-          title: {
-            text: 'Databases per environment at ' + response['Moment']
-          },
-          xAxis: {
-            type: 'category',
-          },
-          yAxis: {
-            title: {
-              text: '# of Databases',
-            },
-          },
-          legend: {
-            enabled: false
-          },
-          series: [{
-            data: data,
-            dataLabels: {
-              enabled: true,
-            }
-          }]
-        });
-      });
-
-      $.getJSON('engine_count', function(response) {
-        labels = []
-        data = {}
-        for (var i = 0, len = response.length; i < len; i++) {
-          labels = labels.concat(response[i]['Moment']);
-
-          for (var j = 0, engine_len = response[i]['Engines'].length; j < engine_len; j++) {
-            engine = response[i]['Engines'][j]['Name']
-            count = response[i]['Engines'][j]['Count']
-
-            if (!(engine in data)) {
-              data[engine] = []
-              for (var x = 0; x < i; x++){
-                data[engine] = data[engine].concat(0);
-              }
-            }
-            data[engine] = data[engine].concat(count)
+      function load_date() {
+        var dt_from = $("#calendar_from").val();
+        var dt_to = $("#calendar_to").val();
+        $.getJSON('database_count?from='+dt_from+'&to='+dt_to, function(response) {
+          labels = []
+          data = []
+          for (var i = 0, len = response.length; i < len; i++) {
+            labels = labels.concat(response[i]['Moment']);
+            data = data.concat(parseInt(response[i]['Count']));
           }
-        }
 
-        engines = []
-        for (engine in data) {
-          engines = engines.concat({
-            'name': engine, 'data': data[engine]
-          })
-        }
+          Highcharts.chart('database_count', {
+            chart: {
+              type: 'line'
+            },
+            title: {
+              text: '# of Databases'
+            },
+            legend: {
+              enabled: false
+            },
+            xAxis: {
+              categories: labels
+            },
+            yAxis: {
+              title: {
+                text: '# of Databases',
+              },
+            },
+            series: [{
+              name: 'Databases',
+              data: data
+            }]
+          });
+        }); 
+      
 
-        Highcharts.chart('engine_count', {
-          chart: {
-            type: 'column'
-          },
-          title: {
-            text: '# of Databases per engine'
-          },
-          xAxis: {
-            categories: labels
-          },
-          legend: {
-            align: 'right',
-            x: -30,
-            verticalAlign: 'top',
-            y: 25,
-            floating: true,
-            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-            borderColor: '#CCC',
-            borderWidth: 1,
-            shadow: false
-          },
-          tooltip: {
-              headerFormat: '<b>{point.x}</b><br/>',
-              pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-          },
-          plotOptions: {
-            column: {
-              stacking: 'normal',
+        $.getJSON('team_count?from='+dt_from+'&to='+dt_to, function(response) {
+          data = []
+          for (var i = 0, len = response['Teams'].length; i < len; i++) {
+            name = response['Teams'][i]['Name'];
+            value = parseInt(response['Teams'][i]['Count']); 
+            data = data.concat([[name, value],])
+          }
+
+          data.sort(function(first, second) {
+            return second[1] - first[1];
+          });
+
+          Highcharts.chart('team_count', {
+            chart: {
+              type: 'column'
+            },
+            title: {
+              text: 'Databases per team at ' + response['Moment']
+            },
+            xAxis: {
+              type: 'category'
+            },
+            yAxis: {
+              title: {
+                text: '# of Databases',
+              },
+            },
+            legend: {
+              enabled: false
+            },
+            series: [{
+              data: data,
               dataLabels: {
                 enabled: true,
-                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
               }
-            }
-          },
-          series: engines
+            }]
+          });
         });
-      });
+
+        $.getJSON('project_count?from='+dt_from+'&to='+dt_to, function(response) {
+          data = []
+          for (var i = 0, len = response['Projects'].length; i < len; i++) {
+            name = response['Projects'][i]['Name'];
+            value = parseInt(response['Projects'][i]['Count']);
+            data = data.concat([[name, value],])
+          }
+
+          data.sort(function(first, second) {
+            return second[1] - first[1];
+          });
+
+          Highcharts.chart('project_count', {
+            chart: {
+              type: 'column'
+            },
+            title: {
+              text: 'Databases per project at ' + response['Moment']
+            },
+            xAxis: {
+              type: 'category',
+            },
+            yAxis: {
+              title: {
+                text: '# of Databases',
+              },
+            },
+            legend: {
+              enabled: false
+            },
+            series: [{
+              data: data,
+              dataLabels: {
+                enabled: true,
+              }
+            }]
+          });
+        });
+      
+
+        $.getJSON('environment_count?from='+dt_from+'&to='+dt_to, function(response) {
+          data = []
+          for (var i = 0, len = response['Environments'].length; i < len; i++) {
+            name = response['Environments'][i]['Name'];
+            value = parseInt(response['Environments'][i]['Count']);
+            data = data.concat([[name, value],])
+          }
+
+          data.sort(function(first, second) {
+            return second[1] - first[1];
+          });
+
+          Highcharts.chart('environment_count', {
+            chart: {
+              type: 'column'
+            },
+            title: {
+              text: 'Databases per environment at ' + response['Moment']
+            },
+            xAxis: {
+              type: 'category',
+            },
+            yAxis: {
+              title: {
+                text: '# of Databases',
+              },
+            },
+            legend: {
+              enabled: false
+            },
+            series: [{
+              data: data,
+              dataLabels: {
+                enabled: true,
+              }
+            }]
+          });
+        });
+
+        $.getJSON('engine_count?from='+dt_from+'&to='+dt_to, function(response) {
+          labels = []
+          data = {}
+          for (var i = 0, len = response.length; i < len; i++) {
+            labels = labels.concat(response[i]['Moment']);
+
+            for (var j = 0, engine_len = response[i]['Engines'].length; j < engine_len; j++) {
+              engine = response[i]['Engines'][j]['Name']
+              count = response[i]['Engines'][j]['Count']
+
+              if (!(engine in data)) {
+                data[engine] = []
+                for (var x = 0; x < i; x++){
+                  data[engine] = data[engine].concat(0);
+                }
+              }
+              data[engine] = data[engine].concat(count)
+            }
+          }
+
+          engines = []
+          for (engine in data) {
+            engines = engines.concat({
+              'name': engine, 'data': data[engine]
+            })
+          }
+
+          Highcharts.chart('engine_count', {
+            chart: {
+              type: 'column'
+            },
+            title: {
+              text: '# of Databases per engine'
+            },
+            xAxis: {
+              categories: labels
+            },
+            legend: {
+              align: 'right',
+              x: -30,
+              verticalAlign: 'top',
+              y: 25,
+              floating: true,
+              backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+              borderColor: '#CCC',
+              borderWidth: 1,
+              shadow: false
+            },
+            tooltip: {
+                headerFormat: '<b>{point.x}</b><br/>',
+                pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+            },
+            plotOptions: {
+              column: {
+                stacking: 'normal',
+                dataLabels: {
+                  enabled: true,
+                  color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                }
+              }
+            },
+            series: engines
+          });
+        });
+      }
     });
   </script>
 </head>
 
 <body>
+
+  <div class="panel-body">
+      <div class="control-group">
+        <form action="/calendar" method="post">
+          <input type="date" name="calendar" id="calendar_from" value="">
+          <input type="date" name="calendar" id="calendar_to" value="">
+          <a type="button" class="btn btn-primary" type="submit" value="Send date" title="Send" id="id_date">
+              Send
+          </a>
+        </form>
+      </div>
+  </div>
+
   <div id="engine_count" style="width:100%; height:400px;"></div>
   <div id="database_count" style="width:100%; height:400px;"></div>
   <div id="team_count" style="width:100%; height:400px;"></div>
   <div id="project_count" style="width:100%; height:400px;"></div>
   <div id="environment_count" style="width:100%; height:400px;"></div>
-</body>
 
-  <script type="text/javascript">
+  
+</body>
+  <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 </script>
 </html>
