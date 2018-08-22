@@ -33,8 +33,13 @@ func TeamCounterGetLatest(connection Connection, dateFrom string, dateTo string)
 	filter := DateTimeFilter(dateFrom, dateTo)
 	
 	err := collection.Find(filter).Limit(1).Sort("-$natural").One(&counters)
+
 	if err != nil {
+		if err.Error() == "not found"{
+			return TeamMoment{}
+		}
 		panic(err)
 	}
+	
 	return counters
 }

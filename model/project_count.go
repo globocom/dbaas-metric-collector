@@ -32,9 +32,13 @@ func ProjectCounterGetLatest(connection Connection, dateFrom string, dateTo stri
 	collection := connection.Database.C("ProjectCounterMoment")
 
 	filter := DateTimeFilter(dateFrom, dateTo)
-
+	
 	err := collection.Find(filter).Limit(1).Sort("-$natural").One(&counters)
+
 	if err != nil {
+		if err.Error() == "not found"{
+			return ProjectMoment{}
+		}
 		panic(err)
 	}
 	return counters
