@@ -17,7 +17,7 @@ func DatabaseCounterAdd(connection Connection, moment time.Time, count int) {
 	}
 }
 
-func DatabaseCounterGet(connection Connection, dateFrom string, dateTo string) []DatabaseCount {
+func DatabaseCounterGet(connection Connection, dateFrom time.Time, dateTo time.Time) []DatabaseCount {
 	counters := []DatabaseCount{}
 	collection := connection.Database.C("DatabaseCounter")
 

@@ -27,7 +27,7 @@ func ProjectCounterAdd(connection Connection, moment time.Time, projects map[str
 	}
 }
 
-func ProjectCounterGetLatest(connection Connection, dateFrom string, dateTo string) ProjectMoment {
+func ProjectCounterGetLatest(connection Connection, dateFrom time.Time, dateTo time.Time) ProjectMoment {
 	counters := ProjectMoment{}
 	collection := connection.Database.C("ProjectCounterMoment")
 

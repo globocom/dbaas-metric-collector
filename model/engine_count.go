@@ -27,7 +27,7 @@ func EngineCounterAdd(connection Connection, moment time.Time, engines map[strin
 	}
 }
 
-func EngineCounterGet(connection Connection, dateFrom string, dateTo string) []EngineMoment {
+func EngineCounterGet(connection Connection, dateFrom time.Time, dateTo time.Time) []EngineMoment {
 	counters := []EngineMoment{}
 	collection := connection.Database.C("EngineCounterMoment")
 

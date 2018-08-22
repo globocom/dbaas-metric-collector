@@ -27,7 +27,7 @@ func TeamCounterAdd(connection Connection, moment time.Time, teams map[string]in
 	}
 }
 
-func TeamCounterGetLatest(connection Connection, dateFrom string, dateTo string) TeamMoment {
+func TeamCounterGetLatest(connection Connection, dateFrom time.Time, dateTo time.Time) TeamMoment {
 	counters := TeamMoment{}
 	collection := connection.Database.C("TeamCounterMoment")
 	filter := DateTimeFilter(dateFrom, dateTo)

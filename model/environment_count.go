@@ -27,7 +27,7 @@ func EnvironmentCounterAdd(connection Connection, moment time.Time, environments
 	}
 }
 
-func EnvironmentCounterGetLatest(connection Connection, dateFrom string, dateTo string) EnvironmentMoment {
+func EnvironmentCounterGetLatest(connection Connection, dateFrom time.Time, dateTo time.Time) EnvironmentMoment {
 	counters := EnvironmentMoment{}
 	collection := connection.Database.C("EnvironmentCounterMoment")
  
