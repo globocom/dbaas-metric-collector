@@ -5,17 +5,37 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/otherpirate/dbaas-metric-collector/collector"
 	"github.com/otherpirate/dbaas-metric-collector/cron"
 	"github.com/otherpirate/dbaas-metric-collector/model"
 )
 
-func getDate(req *http.Request) (string, string){
+func getDate(req *http.Request) (time.Time, time.Time){
     queryString := req.URL.Query()
 	dateFrom := queryString["from"][0] 
 	dateTo := queryString["to"][0] 
-    return dateFrom, dateTo
+
+	to := time.Now()
+	from := time.Unix(0, 0)
+
+	queryFromTime := "T00:00:00.000Z"
+	queryToTime := "T23:59:59.000Z"
+	if (len(dateFrom) == 0) && (len(dateTo) > 0) {
+		dateTo += queryToTime
+		to, _ = time.Parse("2006-01-02T15:04:05.000Z", dateTo)
+	} else if (len(dateFrom) > 0) && (len(dateTo) == 0) {
+		dateFrom += queryFromTime
+		from, _ = time.Parse("2006-01-02T15:04:05.000Z", dateFrom)	
+	} else if ((len(dateFrom) > 0) && (len(dateTo) > 0)){
+		dateFrom += queryFromTime
+		dateTo += queryToTime
+		from, _ = time.Parse("2006-01-02T15:04:05.000Z", dateFrom)
+		to, _ = time.Parse("2006-01-02T15:04:05.000Z", dateTo)
+	}
+
+	return from, to	
 }
 
 func main() {
