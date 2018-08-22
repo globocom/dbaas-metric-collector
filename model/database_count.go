@@ -1,7 +1,7 @@
 package model
 
 import (
-	"time"		
+	"time"
 )
 
 type DatabaseCount struct {
