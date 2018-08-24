@@ -2,8 +2,6 @@ package model
 
 import (
 	"time"
-
-	"gopkg.in/mgo.v2/bson"
 )
 
 type TeamCount struct {
@@ -29,12 +27,19 @@ func TeamCounterAdd(connection Connection, moment time.Time, teams map[string]in
 	}
 }
 
-func TeamCounterGetLatest(connection Connection) TeamMoment {
+func TeamCounterGetLatest(connection Connection, dateFrom time.Time, dateTo time.Time) TeamMoment {
 	counters := TeamMoment{}
 	collection := connection.Database.C("TeamCounterMoment")
-	err := collection.Find(bson.M{}).Limit(1).Sort("-$natural").One(&counters)
+	filter := DateTimeFilter(dateFrom, dateTo)
+	
+	err := collection.Find(filter).Limit(1).Sort("-$natural").One(&counters)
+
 	if err != nil {
+		if err.Error() == "not found"{
+			return TeamMoment{}
+		}
 		panic(err)
 	}
+	
 	return counters
 }

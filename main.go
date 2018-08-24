@@ -5,11 +5,35 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/otherpirate/dbaas-metric-collector/collector"
 	"github.com/otherpirate/dbaas-metric-collector/cron"
 	"github.com/otherpirate/dbaas-metric-collector/model"
 )
+
+func getDate(req *http.Request) (time.Time, time.Time){
+    queryString := req.URL.Query()
+	dateFrom := queryString["from"][0] 
+	dateTo := queryString["to"][0] 
+
+	to := time.Now()
+	from := time.Unix(0, 0)
+
+	queryFromTime := "T00:00:00.000Z"
+	queryToTime := "T23:59:59.000Z"
+
+	if (len(dateTo) > 0) {
+		dateTo += queryToTime
+		to, _ = time.Parse("2006-01-02T15:04:05.000Z", dateTo)
+	} 
+	if (len(dateFrom) > 0) {
+		dateFrom += queryFromTime
+		from, _ = time.Parse("2006-01-02T15:04:05.000Z", dateFrom)	
+	}
+
+	return from, to	
+}
 
 func main() {
 	http.Handle("/", http.FileServer(http.Dir("page")))
@@ -42,25 +66,29 @@ func healthcheck(res http.ResponseWriter, req *http.Request) {
 func database_count(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 
+	dateFrom, dateTo := getDate(req)
+	
 	connection := model.GetConnection()
 	defer connection.Session.Close()
-
-	counters := model.DatabaseCounterGet(connection, 30)
+	counters := model.DatabaseCounterGet(connection, dateFrom, dateTo)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)
 	}
-
+   
 	res.Write(content)
 }
+
 
 func team_count(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 
+	dateFrom, dateTo := getDate(req)
+
 	connection := model.GetConnection()
 	defer connection.Session.Close()
 
-	counters := model.TeamCounterGetLatest(connection)
+	counters := model.TeamCounterGetLatest(connection, dateFrom, dateTo)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)
@@ -72,10 +100,12 @@ func team_count(res http.ResponseWriter, req *http.Request) {
 func project_count(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 
+	dateFrom, dateTo := getDate(req)
+
 	connection := model.GetConnection()
 	defer connection.Session.Close()
 
-	counters := model.ProjectCounterGetLatest(connection)
+	counters := model.ProjectCounterGetLatest(connection, dateFrom , dateTo)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)
@@ -87,10 +117,12 @@ func project_count(res http.ResponseWriter, req *http.Request) {
 func environment_count(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 
+	dateFrom, dateTo := getDate(req)
+
 	connection := model.GetConnection()
 	defer connection.Session.Close()
 
-	counters := model.EnvironmentCounterGetLatest(connection)
+	counters := model.EnvironmentCounterGetLatest(connection, dateFrom, dateTo)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)
@@ -102,10 +134,12 @@ func environment_count(res http.ResponseWriter, req *http.Request) {
 func engine_count(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 
+	dateFrom, dateTo := getDate(req)
+
 	connection := model.GetConnection()
 	defer connection.Session.Close()
 
-	counters := model.EngineCounterGet(connection, 30)
+	counters := model.EngineCounterGet(connection, dateFrom, dateTo)
 	content, err := json.Marshal(counters)
 	if err != nil {
 		panic(err)
