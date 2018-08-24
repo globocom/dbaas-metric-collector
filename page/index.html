@@ -38,6 +38,7 @@
         $.getJSON('database_count?from='+dt_from+'&to='+dt_to, function(response) {
           labels = []
           data = []
+
           for (var i = 0, len = response.length; i < len; i++) {
             labels = labels.concat(response[i]['Moment']);
             data = data.concat(parseInt(response[i]['Count']));
@@ -75,9 +76,11 @@
             data = data.concat([[],])
           } 
           else {
-            name = response['Teams'][0]['Name'];
-            value = parseInt(response['Teams'][0]['Count']); 
-            data = data.concat([[name, value],])
+            for (var i = 0, len = response['Teams'].length; i < len; i++) {
+              name = response['Teams'][i]['Name'];
+              value = parseInt(response['Teams'][i]['Count']); 
+              data = data.concat([[name, value],])
+            }
           }
       
           data.sort(function(first, second) {
@@ -117,9 +120,11 @@
             data = data.concat([[],])
           } 
           else {
-            name = response['Projects'][0]['Name'];
-            value = parseInt(response['Projects'][0]['Count']); 
-            data = data.concat([[name, value],])
+            for (var i = 0, len = response['Projects'].length; i < len; i++) {
+              name = response['Projects'][i]['Name'];
+              value = parseInt(response['Projects'][i]['Count']); 
+              data = data.concat([[name, value],])
+            }
           }
 
           data.sort(function(first, second) {
@@ -160,9 +165,11 @@
             data = data.concat([[],])
           } 
           else {
-            name = response['Environments'][0]['Name'];
-            value = parseInt(response['Environments'][0]['Count']); 
-            data = data.concat([[name, value],])
+            for (var i = 0, len = response['Environments'].length; i < len; i++) {
+              name = response['Environments'][i]['Name'];
+              value = parseInt(response['Environments'][i]['Count']); 
+              data = data.concat([[name, value],])
+            }
           }
 
           data.sort(function(first, second) {
