@@ -22,17 +22,14 @@ func getDate(req *http.Request) (time.Time, time.Time){
 
 	queryFromTime := "T00:00:00.000Z"
 	queryToTime := "T23:59:59.000Z"
-	if (len(dateFrom) == 0) && (len(dateTo) > 0) {
+
+	if (len(dateTo) > 0) {
 		dateTo += queryToTime
 		to, _ = time.Parse("2006-01-02T15:04:05.000Z", dateTo)
-	} else if (len(dateFrom) > 0) && (len(dateTo) == 0) {
+	} 
+	if (len(dateFrom) > 0) {
 		dateFrom += queryFromTime
 		from, _ = time.Parse("2006-01-02T15:04:05.000Z", dateFrom)	
-	} else if ((len(dateFrom) > 0) && (len(dateTo) > 0)){
-		dateFrom += queryFromTime
-		dateTo += queryToTime
-		from, _ = time.Parse("2006-01-02T15:04:05.000Z", dateFrom)
-		to, _ = time.Parse("2006-01-02T15:04:05.000Z", dateTo)
 	}
 
 	return from, to	
