@@ -5,10 +5,16 @@
   <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
   <script type="text/javascript" src="js/jquery.min.js"></script>
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-datepicker.min.css">
+
 
   <script type="text/javascript" language="javascript">
     
     $(document).ready(function() {
+
+      $("#calendar_from").datepicker();
+      $("#calendar_to").datepicker();
+
       default_value_date()
       load_date();
 
@@ -26,10 +32,10 @@
         if (to_month < 10) to_month = "0" + to_month;
         if (from_month < 10) from_month = "0" + from_month;
         if (day < 10) day = "0" + day;
-        var to = to.getFullYear() + '-' + to_month + '-' + day;
-        var from = from.getFullYear() + '-' + from_month + '-' + day;
-        $('#calendar_from').val(from);
-        $('#calendar_to').val(to);
+        var to =  day + '/' + to_month + '/' + to.getFullYear();
+        var from = day + '/' + from_month + '/' + from.getFullYear();
+        $('#calendar_from').val(from).datepicker('update');
+        $('#calendar_to').val(to).datepicker('update');
       };
 
       function load_date() {
@@ -277,8 +283,9 @@
   <div class="panel-body">
       <div class="control-group">
         <form action="/calendar" method="post">
-          <input type="date" name="calendar" id="calendar_from" value="">
-          <input type="date" name="calendar" id="calendar_to" value="">
+          <input type="text" data-date-format="dd/mm/yyyy" id="calendar_from" value="">
+          <input type="text" data-date-format="dd/mm/yyyy" id="calendar_to" value="">
+
           <a type="button" class="btn btn-primary" type="submit" value="Send date" title="Send" id="id_date">
               Send
           </a>
@@ -294,6 +301,7 @@
 
   
 </body>
-	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <script stype="text/javascript" src="js/bootstrap-datepicker.min.js"></script>
 </script>
 </html>
