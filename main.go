@@ -14,7 +14,7 @@ import (
 
 func getDate(req *http.Request) (time.Time, time.Time){
     queryString := req.URL.Query()
-	dateFrom := queryString["from"][0] 
+	dateFrom := queryString["from"][0]
 	dateTo := queryString["to"][0] 
 
 	to := time.Now()
@@ -25,11 +25,11 @@ func getDate(req *http.Request) (time.Time, time.Time){
 
 	if (len(dateTo) > 0) {
 		dateTo += queryToTime
-		to, _ = time.Parse("2006-01-02T15:04:05.000Z", dateTo)
+		to, _ = time.Parse("02/01/2006T15:04:05.000Z", dateTo)
 	} 
 	if (len(dateFrom) > 0) {
 		dateFrom += queryFromTime
-		from, _ = time.Parse("2006-01-02T15:04:05.000Z", dateFrom)	
+		from, _ = time.Parse("02/01/2006T15:04:05.000Z", dateFrom)	
 	}
 
 	return from, to	
