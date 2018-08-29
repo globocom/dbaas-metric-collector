@@ -7,11 +7,9 @@
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/bootstrap-datepicker.min.css">
 
-
   <script type="text/javascript" language="javascript">
     
     $(document).ready(function() {
-
       $("#calendar_from").datepicker();
       $("#calendar_to").datepicker();
 
@@ -32,7 +30,7 @@
         if (to_month < 10) to_month = "0" + to_month;
         if (from_month < 10) from_month = "0" + from_month;
         if (day < 10) day = "0" + day;
-        var to =  day + '/' + to_month + '/' + to.getFullYear();
+        var to = day + '/' + to_month + '/' + to.getFullYear();
         var from = day + '/' + from_month + '/' + from.getFullYear();
         $('#calendar_from').val(from).datepicker('update');
         $('#calendar_to').val(to).datepicker('update');
@@ -285,7 +283,6 @@
         <form action="/calendar" method="post">
           <input type="text" data-date-format="dd/mm/yyyy" id="calendar_from" value="">
           <input type="text" data-date-format="dd/mm/yyyy" id="calendar_to" value="">
-
           <a type="button" class="btn btn-primary" type="submit" value="Send date" title="Send" id="id_date">
               Send
           </a>
