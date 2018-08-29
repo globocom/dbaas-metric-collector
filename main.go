@@ -6,19 +6,11 @@ import (
 	"net/http"
 	"os"
 	"time"
-	"strings"
-	// "reflect"
 
 	"github.com/otherpirate/dbaas-metric-collector/collector"
 	"github.com/otherpirate/dbaas-metric-collector/cron"
 	"github.com/otherpirate/dbaas-metric-collector/model"
 )
-
-func changeString(date string) string{
-	dateList := strings.Split(date, "/")
-	dateList[0], dateList[2] = dateList[2], dateList[0]
-	return strings.Join(dateList, "-")
-}
 
 func getDate(req *http.Request) (time.Time, time.Time){
     queryString := req.URL.Query()
@@ -32,12 +24,12 @@ func getDate(req *http.Request) (time.Time, time.Time){
 	queryToTime := "T23:59:59.000Z"
 
 	if (len(dateTo) > 0) {
-		dateTo = changeString(dateTo) + queryToTime
-		to, _ = time.Parse("2006-01-02T15:04:05.000Z", dateTo)
+		dateTo += queryToTime
+		to, _ = time.Parse("02/01/2006T15:04:05.000Z", dateTo)
 	} 
 	if (len(dateFrom) > 0) {
-		dateFrom = changeString(dateFrom) + queryFromTime
-		from, _ = time.Parse("2006-01-02T15:04:05.000Z", dateFrom)	
+		dateFrom += queryFromTime
+		from, _ = time.Parse("02/01/2006T15:04:05.000Z", dateFrom)	
 	}
 
 	return from, to	
