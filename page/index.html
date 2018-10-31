@@ -20,20 +20,21 @@
         load_date();
       });
 
+      function set_date(date, input) {
+        var month = date.getMonth() + 1
+        var day = date.getDate()
+        if (month < 10) month = "0" + month;
+        if (day < 10) day = "0" + day;
+        var value = day + '/' + month + '/' + date.getFullYear();
+        input.val(value).datepicker('update');
+      };
+
       function default_value_date(){
         var to = new Date();
         var from = new Date();
-        from.setMonth(to.getMonth())
-        var from_month = from.getMonth()
-        var to_month = (to.getMonth() + 1);               
-        var day = to.getDate();
-        if (to_month < 10) to_month = "0" + to_month;
-        if (from_month < 10) from_month = "0" + from_month;
-        if (day < 10) day = "0" + day;
-        var to = day + '/' + to_month + '/' + to.getFullYear();
-        var from = day + '/' + from_month + '/' + from.getFullYear();
-        $('#calendar_from').val(from).datepicker('update');
-        $('#calendar_to').val(to).datepicker('update');
+        from.setDate(to.getDate() - 30);
+        set_date(from, $('#calendar_from'))
+        set_date(to, $('#calendar_to'))
       };
 
       function load_date() {
