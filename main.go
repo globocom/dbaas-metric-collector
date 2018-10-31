@@ -7,9 +7,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/otherpirate/dbaas-metric-collector/collector"
-	"github.com/otherpirate/dbaas-metric-collector/cron"
-	"github.com/otherpirate/dbaas-metric-collector/model"
+	"github.com/globocom/dbaas-metric-collector/collector"
+	"github.com/globocom/dbaas-metric-collector/cron"
+	"github.com/globocom/dbaas-metric-collector/model"
 )
 
 func getDate(req *http.Request) (time.Time, time.Time){

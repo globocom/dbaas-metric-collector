@@ -1,7 +1,7 @@
 package settings
 
 import (
-	"github.com/otherpirate/dbaas-metric-collector/util"
+	"github.com/globocom/dbaas-metric-collector/util"
 )
 
 var DBAAS_ENDPOINT = util.GetEnv("DBAAS_ENDPOINT", "http://127.0.0.1:8000")

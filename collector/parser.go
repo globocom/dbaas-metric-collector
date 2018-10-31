@@ -3,7 +3,7 @@ package collector
 import (
 	"time"
 
-	"github.com/otherpirate/dbaas-metric-collector/model"
+	"github.com/globocom/dbaas-metric-collector/model"
 )
 
 func Extractor(databases []Database) {

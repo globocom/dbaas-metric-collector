@@ -3,7 +3,7 @@ package model
 import (
 	"gopkg.in/mgo.v2"
 
-	"github.com/otherpirate/dbaas-metric-collector/settings"
+	"github.com/globocom/dbaas-metric-collector/settings"
 )
 
 type Connection struct {

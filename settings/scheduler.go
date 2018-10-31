@@ -3,7 +3,7 @@ package settings
 import (
 	"strconv"
 
-	"github.com/otherpirate/dbaas-metric-collector/util"
+	"github.com/globocom/dbaas-metric-collector/util"
 )
 
 var LOADING_HOUR, _ = strconv.Atoi(util.GetEnv("LOADING_HOUR", "7"))

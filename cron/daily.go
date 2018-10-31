@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/otherpirate/dbaas-metric-collector/collector"
-	"github.com/otherpirate/dbaas-metric-collector/settings"
+	"github.com/globocom/dbaas-metric-collector/collector"
+	"github.com/globocom/dbaas-metric-collector/settings"
 )
 
 const INTERVAL_PERIOD time.Duration = 24 * time.Hour

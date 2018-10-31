@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/otherpirate/dbaas-metric-collector/settings"
+	"github.com/globocom/dbaas-metric-collector/settings"
 )
 
 type Database struct {
